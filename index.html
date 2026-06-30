@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Graphic Designer | Portfolio</title>
+    <style>
+        :root {
+            --glass-bg: rgba(20, 20, 24, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --bg-overlay: rgba(0, 0, 0, 0.85);
+            --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent; scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+            user-select: none; -webkit-user-select: none;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #050505; color: var(--text-main);
+            overflow-x: hidden; line-height: 1.5;
+        }
+
+        body.locked { overflow: hidden; }
+
+        #bg-grid {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            z-index: -2; display: flex; gap: 16px; transform: rotate(-12deg) scale(1.1);
+            justify-content: center; pointer-events: none; will-change: transform;
+        }
+
+        .bg-col {
+            display: flex; flex-direction: column; width: 320px; will-change: transform;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden; transform-style: preserve-3d;
+        }
+
+        .col-track { display: flex; flex-direction: column; gap: 16px; padding-bottom: 16px; }
+
+        .col-track img {
+            width: 100%; height: 180px; border-radius: 12px; object-fit: cover;
+            opacity: 0.5; filter: grayscale(30%) contrast(120%);
+        }
+
+        @keyframes scrollUp { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(0, -50%, 0); } }
+        @keyframes scrollDown { 0% { transform: translate3d(0, -50%, 0); } 100% { transform: translate3d(0, 0, 0); } }
+
+        .col-up { animation: scrollUp 45s linear infinite; }
+        .col-down { animation: scrollDown 45s linear infinite; }
+
+        .overlay {
+            position: fixed; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+            z-index: -1; pointer-events: none; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transform: translateZ(0);
+        }
+
+        .main-container {
+            position: relative; z-index: 1; max-width: 440px; margin: 0 auto; padding: 50px 20px;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            animation: fadeIn 1.2s var(--ease-apple) forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .profile { text-align: center; margin-bottom: 36px; }
+
+        .avatar {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--glass-highlight); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            margin-bottom: 16px; transition: transform 0.4s var(--ease-apple);
+        }
+
+        .avatar:hover { transform: scale(1.05); }
+
+        .title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+        .subtitle { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+
+        .links-stack { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 44px; }
+
+        .glass-btn {
+            width: 100%; padding: 14px 20px; border-radius: 16px; background: var(--glass-bg);
+            border: 1px solid var(--glass-border); color: var(--text-main); text-decoration: none;
+            font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px;
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.3s var(--ease-apple), background 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); cursor: pointer;
+        }
+
+        .glass-btn[href="#"], .glass-btn[href=""], .glass-btn:not([href]) {
+            opacity: 0.3; pointer-events: none; cursor: not-allowed; filter: grayscale(0.8);
+        }
+
+        .glass-btn svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; transition: transform 0.3s var(--ease-apple); }
+        .glass-btn:hover svg { transform: scale(1.15); }
+        .glass-btn:hover, .glass-btn:active { transform: scale(1.03); background: rgba(40, 40, 45, 0.6); border-color: var(--glass-highlight); }
+
+        .works-section { width: 100%; margin-bottom: 40px; }
+        .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; padding-left: 8px; font-weight: 600; }
+        .works-slider-wrapper { position: relative; width: 100%; }
+
+        .works-slider {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 10px;
+            scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; 
+        }
+
+        .works-slider.is-smooth { scroll-behavior: smooth; }
+        .works-slider::-webkit-scrollbar { display: none; }
+
+        .work-card {
+            flex-shrink: 0; width: 260px; height: 146px; border-radius: 16px; scroll-snap-align: center;
+            overflow: hidden; position: relative; cursor: pointer; border: 1px solid var(--glass-border);
+            transition: transform 0.3s var(--ease-apple); background: var(--glass-bg);
+        }
+
+        .work-card:active { transform: scale(0.97); }
+        .work-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease-apple); }
+        .work-card:hover img { transform: scale(1.05); }
+
+        .work-overlay-text {
+            position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 16px 12px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); font-size: 13px; font-weight: 500;
+            color: var(--text-main); opacity: 0; transform: translateY(10px); transition: all 0.3s var(--ease-apple);
+        }
+
+        .work-card:hover .work-overlay-text { opacity: 1; transform: translateY(0); }
+
+        .slider-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border-radius: 50%;
+            background: var(--glass-bg); border: 1px solid var(--glass-highlight); color: white; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 10; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity 0.3s, background 0.3s, transform 0.3s;
+            line-height: 0; padding: 0;
+        }
+        
+        .slider-arrow:hover { background: rgba(255,255,255,0.15); transform: translateY(-50%) scale(1.1); }
+        .slider-arrow:active { transform: translateY(-50%) scale(0.95); }
+        .slider-arrow svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; position: relative; }
+        
+        .arrow-prev svg { left: -1px; } .arrow-next svg { left: 1px; }
+        .arrow-prev { left: -18px; } .arrow-next { right: -18px; }
+
+        @media (hover: hover) and (pointer: fine) { .works-slider-wrapper:hover .slider-arrow { opacity: 1; pointer-events: auto; } }
+
+        .modal {
+            position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+            padding: 20px; opacity: 0; pointer-events: none; background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); transition: opacity 0.4s var(--ease-apple);
+        }
+
+        .modal.active { opacity: 1; pointer-events: auto; }
+
+        .modal-content {
+            background: var(--glass-bg); border: 1px solid var(--glass-highlight); border-radius: 20px; width: 100%; max-width: 800px;
+            overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6); transform: scale(0.95); transition: transform 0.4s var(--ease-apple);
+            display: flex; flex-direction: column; position: relative;
+        }
+
+        .modal.active .modal-content { transform: scale(1); }
+
+        .modal-img-wrapper { position: relative; width: 100%; aspect-ratio: 16/9; background: #050505; overflow: hidden; }
+        
+        .modal-slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s var(--ease-apple); will-change: transform; }
+        .modal-slide { width: 100%; height: 100%; flex-shrink: 0; object-fit: cover; }
+
+        .modal-close {
+            position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--glass-highlight); color: white; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 20; transition: background 0.2s, transform 0.2s; line-height: 0; padding: 0;
+        }
+
+        .modal-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+        .modal-close svg { width: 16px; height: 16px; fill: currentColor; display: block; }
+
+        .modal-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(0,0,0,0.4); border: 1px solid var(--glass-highlight); color: white; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 15; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.3s, transform 0.3s; line-height: 0; padding: 0;
+        }
+        .modal-arrow:hover { background: rgba(255,255,255,0.2); transform: translateY(-50%) scale(1.1); }
+        .modal-arrow:active { transform: translateY(-50%) scale(0.95); }
+        .modal-arrow svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; position: relative; }
+        
+        .modal-prev svg { left: -1px; } .modal-next svg { left: 1px; }
+        .modal-prev { left: 16px; } .modal-next { right: 16px; }
+
+        .modal-dots { position: absolute; bottom: 16px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; z-index: 15; }
+        .modal-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.3s, transform 0.3s; }
+        .modal-dot.active { background: white; transform: scale(1.3); }
+
+        @media (hover: none) and (pointer: coarse) { .modal-arrow { display: none; } }
+
+        @media (min-width: 1024px) {
+            .main-container { zoom: 0.8; }
+            @supports not (zoom: 0.8) { .main-container { transform: scale(0.8); transform-origin: top center; margin-bottom: -20vh; } }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-grid"></div>
+    <div class="overlay"></div>
+
+    <main class="main-container">
+        
+        <header class="profile" id="profile-container"></header>
+        <nav class="links-stack" id="links-container"></nav>
+
+        <section class="works-section">
+            <h2 class="section-title" id="works-title"></h2>
+            <div class="works-slider-wrapper">
+                <button class="slider-arrow arrow-prev" aria-label="Назад">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="works-slider" id="works-slider"></div>
+                <button class="slider-arrow arrow-next" aria-label="Вперед">
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-img-wrapper" id="modal-wrapper">
+                <button class="modal-close" aria-label="Закрити">
+                    <svg viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block;"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+                <button class="modal-arrow modal-prev" aria-label="Назад">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="modal-slider-track" id="modal-track"></div>
+                <button class="modal-arrow modal-next" aria-label="Вперед">
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+                <div class="modal-dots" id="modal-dots"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./data.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. ІНЖЕКЦІЯ ПРОФІЛЮ
+            const profileContainer = document.getElementById('profile-container');
+            profileContainer.innerHTML = `
+                <img src="${PORTFOLIO_DATA.profile.avatarUrl}" alt="Avatar" class="avatar">
+                <h1 class="title">${PORTFOLIO_DATA.profile.title}</h1>
+                <p class="subtitle">${PORTFOLIO_DATA.profile.subtitle}</p>
+            `;
+
+            // 2. ІНЖЕКЦІЯ КНОПОК
+            const linksContainer = document.getElementById('links-container');
+            PORTFOLIO_DATA.links.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link.url;
+                a.className = 'glass-btn';
+                a.innerHTML = `${link.icon} ${link.name}`;
+                linksContainer.appendChild(a);
+            });
+
+            // 3. ІНЖЕКЦІЯ ЗАГОЛОВКА СЕКЦІЇ
+            document.getElementById('works-title').textContent = PORTFOLIO_DATA.ui.worksSectionTitle;
+
+            // 4. ІНЖЕКЦІЯ ПОРТФОЛІО
+            const worksSlider = document.getElementById('works-slider');
+            PORTFOLIO_DATA.works.forEach(work => {
+                const article = document.createElement('article');
+                article.className = 'work-card';
+                article.dataset.gallery = JSON.stringify(work.images);
+                
+                article.innerHTML = `
+                    <img src="${work.images[0]}" alt="${work.title}">
+                    <div class="work-overlay-text">${work.title}</div>
+                `;
+                worksSlider.appendChild(article);
+            });
+
+            // --- БАЗОВА ЛОГІКА АНІМАЦІЙ ТА ФОНУ ---
+            const bgGrid = document.getElementById('bg-grid');
+            const images = [
+                './bg-works/bg1.webp', './bg-works/bg2.webp',
+                './bg-works/bg3.webp', './bg-works/bg4.webp',
+                './bg-works/bg5.webp', './bg-works/bg6.webp'
+            ];
+
+            for (let i = 0; i < 6; i++) {
+                const col = document.createElement('div');
+                col.className = `bg-col ${i % 2 === 0 ? 'col-up' : 'col-down'}`;
+                
+                const track1 = document.createElement('div');
+                track1.className = 'col-track';
+                const track2 = document.createElement('div');
+                track2.className = 'col-track';
+                
+                let colHtml = '';
+                let lastSrc = '';
+                let generatedCount = 0;
+
+                while (generatedCount < 24) {
+                    const availableImages = images.filter(src => src !== lastSrc);
+                    const randomSrc = availableImages[Math.floor(Math.random() * availableImages.length)];
+                    colHtml += `<img src="${randomSrc}" alt="bg">`;
+                    lastSrc = randomSrc;
+                    generatedCount++;
+                }
+                
+                track1.innerHTML = colHtml;
+                track2.innerHTML = colHtml;
+                col.appendChild(track1);
+                col.appendChild(track2);
+                bgGrid.appendChild(col);
+            }
+
+            const prevBtn = document.querySelector('.arrow-prev');
+            const nextBtn = document.querySelector('.arrow-next');
+            const scrollAmount = 260 + 16; 
+
+            const scrollSmoothly = (amount) => {
+                worksSlider.classList.add('is-smooth');
+                worksSlider.scrollBy({ left: amount });
+                setTimeout(() => worksSlider.classList.remove('is-smooth'), 400);
+            };
+
+            prevBtn.addEventListener('click', () => scrollSmoothly(-scrollAmount));
+            nextBtn.addEventListener('click', () => scrollSmoothly(scrollAmount));
+
+            const modal = document.getElementById('modal');
+            const modalTrack = document.getElementById('modal-track');
+            const modalDots = document.getElementById('modal-dots');
+            const closeBtn = document.querySelector('.modal-close');
+            const modalPrev = document.querySelector('.modal-prev');
+            const modalNext = document.querySelector('.modal-next');
+            const body = document.body;
+
+            let currentGallery = [];
+            let currentSlideIndex = 0;
+            let startX = 0;
+
+            const updateModalSlider = () => {
+                modalTrack.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+                document.querySelectorAll('.modal-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlideIndex);
+                });
+
+                modalPrev.style.display = currentSlideIndex === 0 ? 'none' : 'flex';
+                modalNext.style.display = currentSlideIndex === currentGallery.length - 1 ? 'none' : 'flex';
+                
+                if (currentGallery.length <= 1) {
+                    modalPrev.style.display = 'none';
+                    modalNext.style.display = 'none';
+                    modalDots.style.display = 'none';
+                } else {
+                    modalDots.style.display = 'flex';
+                }
+            };
+
+            const openModal = (galleryStr) => {
+                try { currentGallery = JSON.parse(galleryStr); } catch(e) { currentGallery = [galleryStr]; }
+                
+                currentSlideIndex = 0;
+                modalTrack.innerHTML = '';
+                modalDots.innerHTML = '';
+                modalTrack.style.transition = 'none'; 
+
+                currentGallery.forEach((imgSrc, index) => {
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.className = 'modal-slide';
+                    img.alt = `Slide ${index + 1}`;
+                    modalTrack.appendChild(img);
+
+                    const dot = document.createElement('div');
+                    dot.className = `modal-dot ${index === 0 ? 'active' : ''}`;
+                    dot.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        currentSlideIndex = index;
+                        modalTrack.style.transition = ''; 
+                        updateModalSlider();
+                    });
+                    modalDots.appendChild(dot);
+                });
+
+                updateModalSlider();
+                modal.classList.add('active');
+                body.classList.add('locked');
+                
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => { modalTrack.style.transition = ''; });
+                });
+            };
+
+            const closeModal = () => {
+                modal.classList.remove('active');
+                body.classList.remove('locked');
+                setTimeout(() => { modalTrack.innerHTML = ''; modalDots.innerHTML = ''; }, 400);
+            };
+
+            modalPrev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentSlideIndex > 0) { modalTrack.style.transition = ''; currentSlideIndex--; updateModalSlider(); }
+            });
+            
+            modalNext.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentSlideIndex < currentGallery.length - 1) { modalTrack.style.transition = ''; currentSlideIndex++; updateModalSlider(); }
+            });
+
+            let isDragging = false;
+
+            modalTrack.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                modalTrack.style.transition = 'none'; 
+            }, { passive: true });
+
+            modalTrack.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const currentX = e.touches[0].clientX;
+                const diff = currentX - startX;
+                let pull = diff;
+                if ((currentSlideIndex === 0 && diff > 0) || (currentSlideIndex === currentGallery.length - 1 && diff < 0)) { pull = diff * 0.25; }
+                modalTrack.style.transform = `translateX(calc(-${currentSlideIndex * 100}% + ${pull}px))`;
+            }, { passive: true });
+
+            modalTrack.addEventListener('touchend', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                const endX = e.changedTouches[0].clientX;
+                const diff = endX - startX;
+                modalTrack.style.transition = ''; 
+                if (diff > 50 && currentSlideIndex > 0) { currentSlideIndex--; } else if (diff < -50 && currentSlideIndex < currentGallery.length - 1) { currentSlideIndex++; }
+                updateModalSlider();
+            }, { passive: true });
+
+            document.querySelectorAll('.work-card').forEach(card => { 
+                card.addEventListener('click', () => { openModal(card.dataset.gallery); }); 
+            });
+            
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal || e.target.classList.contains('modal-slider-track')) { closeModal(); } });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) { closeModal(); } });
+        });
+    </script>
+</body>
+</html>
