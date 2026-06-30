@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Graphic Designer | Portfolio</title>
+    
+    <link rel="icon" type="image/png" sizes="512x512" href="./avatar/favicon.png">
+    
     <style>
         :root {
             --glass-bg: rgba(20, 20, 24, 0.45);
@@ -50,7 +53,8 @@
         .col-track { display: flex; flex-direction: column; gap: 16px; padding-bottom: 16px; }
 
         .col-track img {
-            width: 100%; height: 180px; border-radius: 12px; object-fit: cover;
+            width: 100%; border-radius: 12px; object-fit: cover;
+            aspect-ratio: 16/9; /* Повернуто пропорцію замість жорстких 180px висоти */
             opacity: 0.5; filter: grayscale(30%) contrast(120%);
         }
 
@@ -61,7 +65,8 @@
         .col-down { animation: scrollDown 45s linear infinite; }
 
         .overlay {
-            position: fixed; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; /* Жорсткі розміри від глюків на мобільному */
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
             z-index: -1; pointer-events: none; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transform: translateZ(0);
         }
 
