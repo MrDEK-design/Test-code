@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Graphic Designer | Portfolio</title>
     
-    <link rel="icon" type="image/png" sizes="512x512" href="./avatar/favicon.png">
-    
+    <link rel="icon" type="image/png" href="./avatar/favicon.png">
+
     <style>
         :root {
             --glass-bg: rgba(20, 20, 24, 0.45);
@@ -39,10 +39,12 @@
 
         body.locked { overflow: hidden; }
 
+        /* ЖОРСТКИЙ АПАРАТНИЙ БЛЮР НА САМОМУ ФОНІ */
         #bg-grid {
             position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
             z-index: -2; display: flex; gap: 16px; transform: rotate(-12deg) scale(1.1);
             justify-content: center; pointer-events: none; will-change: transform;
+            filter: blur(4px); -webkit-filter: blur(4px);
         }
 
         .bg-col {
@@ -53,8 +55,7 @@
         .col-track { display: flex; flex-direction: column; gap: 16px; padding-bottom: 16px; }
 
         .col-track img {
-            width: 100%; border-radius: 12px; object-fit: cover;
-            aspect-ratio: 16/9; /* Повернуто пропорцію замість жорстких 180px висоти */
+            width: 100%; height: 180px; border-radius: 12px; object-fit: cover;
             opacity: 0.5; filter: grayscale(30%) contrast(120%);
         }
 
@@ -64,10 +65,11 @@
         .col-up { animation: scrollUp 45s linear infinite; }
         .col-down { animation: scrollDown 45s linear infinite; }
 
+        /* ОЧИЩЕНИЙ ОВЕРЛЕЙ БЕЗ БЛЮРУ */
         .overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; /* Жорсткі розміри від глюків на мобільному */
+            position: fixed; inset: 0;
             background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
-            z-index: -1; pointer-events: none; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transform: translateZ(0);
+            z-index: -1; pointer-events: none; 
         }
 
         .main-container {
@@ -258,7 +260,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // 1. ІНЖЕКЦІЯ ПРОФІЛЮ
             const profileContainer = document.getElementById('profile-container');
             profileContainer.innerHTML = `
                 <img src="${PORTFOLIO_DATA.profile.avatarUrl}" alt="Avatar" class="avatar">
@@ -266,7 +267,6 @@
                 <p class="subtitle">${PORTFOLIO_DATA.profile.subtitle}</p>
             `;
 
-            // 2. ІНЖЕКЦІЯ КНОПОК
             const linksContainer = document.getElementById('links-container');
             PORTFOLIO_DATA.links.forEach(link => {
                 const a = document.createElement('a');
@@ -276,10 +276,8 @@
                 linksContainer.appendChild(a);
             });
 
-            // 3. ІНЖЕКЦІЯ ЗАГОЛОВКА СЕКЦІЇ
             document.getElementById('works-title').textContent = PORTFOLIO_DATA.ui.worksSectionTitle;
 
-            // 4. ІНЖЕКЦІЯ ПОРТФОЛІО
             const worksSlider = document.getElementById('works-slider');
             PORTFOLIO_DATA.works.forEach(work => {
                 const article = document.createElement('article');
@@ -293,7 +291,6 @@
                 worksSlider.appendChild(article);
             });
 
-            // --- БАЗОВА ЛОГІКА АНІМАЦІЙ ТА ФОНУ ---
             const bgGrid = document.getElementById('bg-grid');
             const images = [
                 './bg-works/bg1.webp', './bg-works/bg2.webp',
